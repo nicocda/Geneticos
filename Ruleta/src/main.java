@@ -21,7 +21,7 @@ public class main {
 	
 		
 		//Coeficiente
-		int coef=(int)Math.pow(2, 30);
+		int coef=(int)Math.pow(2, 30) -1;
 		
 		//genero cromosoma inicial
 		//Con el if, obligo a que tengo si o si 30 digitos, porque salian menores tambien
@@ -66,7 +66,7 @@ public class main {
 			}
 			
 			//Tabla  de resultados
-			System.out.println("N° Numero Binario                Real   Objetivo  Fitness ");
+			System.out.println("N°012345678901234567890123456789 Real   Objetivo  Fitness ");
 			for(int i=0;i<10;i++)
 			{
 				System.out.println(i+" "+Integer.toBinaryString(numeros[i])+" "+numeros[i]+" "+objetivo[i]+" "+fitness[i]);
@@ -107,11 +107,9 @@ public class main {
 				if(rndCrossOver <0.75)
 				{
 					int rndPosCross = rnd.nextInt(30);
-					
 					//cambio
-					hijos[h]=aux1.substring(0, rndPosCross)+aux2.substring(rndPosCross+1,30);
-					System.out.println(hijos[h]);
-					hijos[h+1]=aux2.substring(0, rndPosCross)+aux1.substring(rndPosCross+1,30);
+					hijos[h]=aux1.substring(0, rndPosCross)+aux2.substring(rndPosCross,30);
+					hijos[h+1]=aux2.substring(0, rndPosCross)+aux1.substring(rndPosCross,30);
 				}
 				else
 				{
@@ -126,11 +124,11 @@ public class main {
 					//TODO MUTAR EL BIT CORRESPONDIENTE A LA POSICION "rndPosMut1"
 					if(hijos[h].charAt(rndPosMut) == 0)
 					{
-						hijos[h]=hijos[h].substring(0,rndPosMut-1)+"1"+hijos[h].substring(rndPosMut+1,29);
+						hijos[h]=hijos[h].substring(0,(rndPosMut-1))+"1"+hijos[h].substring((rndPosMut+1),30);
 					}
 					else
 					{
-						hijos[h]=hijos[h].substring(0,rndPosMut-1)+"0"+hijos[h].substring(rndPosMut+1,29);
+						hijos[h]=hijos[h].substring(0,(rndPosMut-1))+"0"+hijos[h].substring((rndPosMut+1),30);
 					}
 					
 				}
@@ -138,17 +136,25 @@ public class main {
 				{
 					int rndPosMut = rnd.nextInt(30);
 					//TODO MUTAR EL BIT CORRESPONDIENTE A LA POSICION "rndPosMut2"
-					if(hijos[h].charAt(rndPosMut) == 0)
+					if(hijos[h].charAt(rndPosMut) == '0')
 					{
-						hijos[h+1]=hijos[h+1].substring(0,rndPosMut-1)+"1"+hijos[h+1].substring(rndPosMut+1,29);
+						hijos[h+1]=hijos[h+1].substring(0,(rndPosMut-1))+"1"+hijos[h+1].substring((rndPosMut+1),30);
 					}
 					else
 					{
-						hijos[h+1]=hijos[h+1].substring(0,rndPosMut-1)+"0"+hijos[h+1].substring(rndPosMut+1,29);
+						hijos[h+1]=hijos[h+1].substring(0,(rndPosMut-1))+"0"+hijos[h+1].substring((rndPosMut+1),30);
 					}
 					
 				}
 				
+			}
+			for (int i=0;i<10;i++)
+			{
+				while(Integer.toBinaryString(numeros[i]).length() != hijos[i].length())
+				{
+					
+				}
+				numeros[i]=Integer.parseInt(hijos[i],2);
 			}
 				
 		}
