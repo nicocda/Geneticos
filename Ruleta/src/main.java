@@ -1,8 +1,12 @@
 import java.util.Random;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.*;
 public class main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 	
 		//Definiciones
 		
@@ -12,12 +16,13 @@ public class main {
 		double[] objetivo = new double[10];
 		double[] fitness = new double[10];
 		Random rnd = new Random();
-		double[] sumaObj = new double[20];
-		double[] promObj = new double[20];
-		double[] maxObj = new double[20];
-		double[] sumaFit = new double[20];
-		double[] promFit = new double[20];
-		double[] maxFit = new double[20];
+		double[] sumaObj = new double[1000];
+		double[] promObj = new double[1000];
+		double[] maxObj = new double[1000];
+		double[] minObj = new double[1000];
+		double[] sumaFit = new double[1000];
+		double[] promFit = new double[1000];
+		double[] maxFit = new double[1000];
 	
 		
 		//Coeficiente
@@ -43,21 +48,24 @@ public class main {
 		}
 			
 		
-		for(int z=0;z<20;z++)
+		for(int z=0;z<1000;z++)
 		{
 			//Obtengo maximo y suma de Funcion Objetivo
 			sumaObj[z] = 0;
 			maxObj[z] = 0;
+			minObj[z] = 1;
 			for(int i=0;i<10;i++)
 			{
 				objetivo[i]= Math.pow((double)numeros[i]/coef, 2);
 				if(objetivo[i]>maxObj[z]) maxObj[z]=objetivo[i];
+				if(objetivo[i]<minObj[z]) minObj[z]=objetivo[i];
 				sumaObj[z]=sumaObj[z]+objetivo[i];
 			}
 			
 			//Obtengo maximo y suma de Funcion Fitness
 			sumaFit[z] = 0;
 			 maxFit[z] = 0;
+			 
 			for(int i=0;i<10;i++)
 			{
 				fitness[i]=objetivo[i]/sumaObj[z];
@@ -66,7 +74,7 @@ public class main {
 			}
 			
 			//Tabla  de resultados
-			System.out.println("N°012345678901234567890123456789 Real   Objetivo  Fitness ");
+			System.out.println("N°                                 Decimal       Objetivo                Fitness ");
 			for(int i=0;i<10;i++)
 			{
 				System.out.println(i+" "+Integer.toBinaryString(numeros[i])+" "+numeros[i]+" "+objetivo[i]+" "+fitness[i]);
@@ -104,6 +112,21 @@ public class main {
 				double rndCrossOver = rnd.nextDouble();
 				String aux1=Integer.toBinaryString(numeros[elegido[h]]);
 				String aux2=Integer.toBinaryString(numeros[elegido[h+1]]);
+				//Mantengo el tamaño de palabra de 30
+				for (int i=0;i<10;i++)
+				{
+					while(aux1.length() <30)
+					{
+						String cadena = aux1;
+						aux1="0".concat(cadena);
+					}
+					while(aux2.length() <30)
+					{
+						String cadena = aux2;
+						aux2="0".concat(cadena);
+					}
+					
+				}
 				if(rndCrossOver <0.75)
 				{
 					int rndPosCross = rnd.nextInt(30);
@@ -120,53 +143,90 @@ public class main {
 				double rndMut2 = rnd.nextDouble();
 				if(rndMut1<0.05)
 				{
-					int rndPosMut = rnd.nextInt(30);
-					//TODO MUTAR EL BIT CORRESPONDIENTE A LA POSICION "rndPosMut1"
+					int rndPosMut = rnd.nextInt(28)+1;
+					String primera = hijos[h].substring(0,(rndPosMut-1));
+					String segunda = hijos[h].substring((rndPosMut+1));
 					if(hijos[h].charAt(rndPosMut) == 0)
 					{
-						hijos[h]=hijos[h].substring(0,(rndPosMut-1))+"1"+hijos[h].substring((rndPosMut+1),30);
+						
+						hijos[h]=primera.concat("1").concat(segunda);
 					}
 					else
 					{
-						hijos[h]=hijos[h].substring(0,(rndPosMut-1))+"0"+hijos[h].substring((rndPosMut+1),30);
+						hijos[h]=primera.concat("0").concat(segunda);
 					}
 					
 				}
 				if(rndMut2<0.05)
 				{
-					int rndPosMut = rnd.nextInt(30);
-					//TODO MUTAR EL BIT CORRESPONDIENTE A LA POSICION "rndPosMut2"
+					//Le sumo 1 para evitar que me genere un 0
+					int rndPosMut = rnd.nextInt(28)+1;
+					System.out.println(rndPosMut);
+					String primera = hijos[h].substring(0,(rndPosMut-1));
+					String segunda = hijos[h].substring((rndPosMut+1));
 					if(hijos[h].charAt(rndPosMut) == '0')
 					{
-						hijos[h+1]=hijos[h+1].substring(0,(rndPosMut-1))+"1"+hijos[h+1].substring((rndPosMut+1),30);
+						hijos[h]=primera.concat("1").concat(segunda);
 					}
 					else
 					{
-						hijos[h+1]=hijos[h+1].substring(0,(rndPosMut-1))+"0"+hijos[h+1].substring((rndPosMut+1),30);
+						hijos[h]=primera.concat("0").concat(segunda);
 					}
-					
 				}
 				
 			}
-			for (int i=0;i<10;i++)
+			
+			for(int i=0;i<10;i++)
 			{
-				while(Integer.toBinaryString(numeros[i]).length() != hijos[i].length())
-				{
-					
-				}
-				numeros[i]=Integer.parseInt(hijos[i],2);
+				//En la primera iteracion tengo solo las 2 primeras posiciones cargadas, el resto null
+				//if(hijos[i]!=null){
+					numeros[i]=Integer.parseInt(hijos[i],2);
+				//}
 			}
 				
 		}
+		try {
+	        BufferedWriter out = new BufferedWriter(new FileWriter("C:\\Users\\nicolas\\desktop\\minimo.txt"));
+	            for (int i = 0; i < 1000; i++) {
+	            	
+	            	String numero ="0,".concat((Double.toString(minObj[i])).substring(2, Double.toString(minObj[i]).length()));
+	                out.write(numero + " \n");
+	            }
+	            out.close();
+	        } catch (IOException e) {
+	        	e.printStackTrace();
+	        }
+		try {
+	        BufferedWriter out = new BufferedWriter(new FileWriter("C:\\Users\\nicolas\\desktop\\promedio.txt"));
+	            for (int i = 0; i < 1000; i++) {
+	            	
+	            	String numero ="0,".concat((Double.toString(promObj[i])).substring(2, Double.toString(promObj[i]).length()));
+	                out.write(numero + " \n");
+	            }
+	            out.close();
+	        } catch (IOException e) {
+	        	e.printStackTrace();
+	        }
+		try {
+	        BufferedWriter out = new BufferedWriter(new FileWriter("C:\\Users\\nicolas\\desktop\\maximo.txt"));
+	            for (int i = 0; i < 1000; i++) {
+	            	
+	            	String numero ="0,".concat((Double.toString(maxObj[i])).substring(2, Double.toString(maxObj[i]).length()));
+	                out.write(numero + " \n");
+	            }
+	            out.close();
+	        } catch (IOException e) {
+	        	e.printStackTrace();
+	        }
 		//Muestro evaluacion de proyecto
-		
 		for(int z=0;z<20;z++)
 		{	
+			 
 			System.out.println("Interaccion N°: "+(z+1));
-			System.out.println("      Funcion Objetivo Funcion Fitness");
-			System.out.println("suma "+sumaObj[z]+" "+sumaFit[z]);
-			System.out.println("promedio "+promObj[z]+" "+promFit[z]);
-			System.out.println("maximo "+maxObj[z]+" "+maxFit[z]);
+			System.out.println("      Funcion Objetivo");
+			System.out.println("Minimo: "+minObj[z]);
+			System.out.println("promedio: "+promObj[z]);
+			System.out.println("maximo: "+maxObj[z]);
 		}
 	}
 	
