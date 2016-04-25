@@ -8,8 +8,7 @@ public class main {
 	public static void main(String[] args) 
 	{
 	
-		//Definiciones
-		
+		//Definiciones	
 		String[] inicial = new String[10];
 		int[] numeros = new int[10];
 		String[] hijos = new String[10];
@@ -24,9 +23,8 @@ public class main {
 		double[] promObj1000 = new double[1000];
 		double[] maxObj1000 = new double[1000];
 		double[] minObj1000 = new double[1000];
+		
 		Random rnd = new Random();
-	
-	
 		
 		//Coeficiente
 		int coef=(int)Math.pow(2, 30) -1;
@@ -46,6 +44,7 @@ public class main {
 		{
 			numeros[i]=Integer.parseInt(inicial[i],2);
 		}
+		
 		for(int z=0;z<20;z++)
 		{
 			//Obtengo minimo, maximo y suma de Funcion Objetivo
@@ -59,12 +58,11 @@ public class main {
 				if(objetivo[i]<minObj20[z]) minObj20[z]=objetivo[i];
 				sumaObj=sumaObj+objetivo[i];
 			}
-			
+			promObj20[z]=sumaObj/10;
 			//Obtengo Funcion Fitness
 			for(int i=0;i<10;i++)
 			{
 				fitness[i]=objetivo[i]/sumaObj;
-				
 			}
 			
 			
@@ -100,7 +98,7 @@ public class main {
 				String aux1=Integer.toBinaryString(numeros[elegido[h]]);
 				String aux2=Integer.toBinaryString(numeros[elegido[h+1]]);
 				//Mantengo el tamaño de palabra de 30
-				//(al trabajar con numeros en decimal, si el numero binario empieza con 0, cuando lo pasasamos a decimal,
+				//(al trabajar con numeros en decimal, si el numero binario empieza con 0, cuando lo pasamos a decimal,
 				//y lo volvemos a pasar a binario, nos queda la cadena mas corta, 
 				//entonces lo que hacemos es agregar tantos 0 al inicio 
 				//como sea necesario para llegar al tamaño de palabra de 30
@@ -132,6 +130,7 @@ public class main {
 					hijos[h]=aux1;
 					hijos[h+1]=aux2;
 				}
+				
 				//si el numero random es menor que 0.05 mutamos
 				double rndMut1 = rnd.nextDouble();
 				if(rndMut1<0.05)
@@ -152,6 +151,7 @@ public class main {
 					}
 					
 				}
+				
 				//si el numero random es menor que 0.05 mutamos
 				double rndMut2 = rnd.nextDouble();
 				if(rndMut2<0.05)
@@ -237,7 +237,7 @@ public class main {
 						if(objetivo[i]<minObj100[z]) minObj100[z]=objetivo[i];
 						sumaObj=sumaObj+objetivo[i];
 					}
-					
+					promObj100[z]=sumaObj/10;
 					//Obtengo Funcion Fitness
 					for(int i=0;i<10;i++)
 					{
@@ -415,7 +415,7 @@ public class main {
 						if(objetivo[i]<minObj1000[z]) minObj1000[z]=objetivo[i];
 						sumaObj=sumaObj+objetivo[i];
 					}
-					
+					promObj1000[z]=sumaObj/10;
 					//Obtengo Funcion Fitness
 					for(int i=0;i<10;i++)
 					{
