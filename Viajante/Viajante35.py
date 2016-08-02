@@ -1,8 +1,12 @@
+from turtle import *
+import Tkinter
+
 #bloque def constantes
-distancias = []
-        #ciudades.append(["Buenos Aires"], ["San S. de Jujuy"])
+distancia = []
+puntos = []
+
 distancia.append([0,1543,1510,1203,1043,1191,1023,478,940,1040,480,715,1150,1110,790,1155,1050,620,1158,960,1455,2635,3228])
-distancia.append(1543,0,99,340,500,960,860,1107,883,1198,1138,930,770,1220,1320,572,1345,1530,2200,2124,2385,3565,4158])
+distancia.append([1543,0,99,340,500,960,860,1107,883,1198,1138,930,770,1220,1320,572,1345,1530,2200,2124,2385,3565,4158])
 distancia.append([1510,99,0,307,467,948,780,1074,803,1118,1105,897,695,1145,1245,539,1227,1497,2082,2091,2352,3532,4125])
 distancia.append([1203,340,307,0,160,936,768,767,791,1106,798,590,338,838,938,232,1005,1190,1860,1784,2045,3225,3818])
 distancia.append([1043,500,467,160,0,776,610,607,633,948,638,430,360,810,850,212,977,1030,1567,1624,1885,3065,3658])
@@ -25,28 +29,84 @@ distancia.append([1455,2385,2352,2045,1885,2378,2210,1665,2187,2495,1696,1455,18
 distancia.append([2635,3565,3532,3225,3065,3558,3390,2845,3367,3675,2876,2635,3070,2860,2540,3075,2800,2035,1930,1675,1180,0,593])
 distancia.append([3228,4158,4125,3818,3658,4151,3983,3438,3960,4268,3469,3228,3660,3453,3133,3668,3393,2628,2523,2268,1773,593,0])
 
+puntos.append([36,69.5])
+puntos.append([-56,239.5])
+puntos.append([-57.1,228.5])
+puntos.append([-54,194.5])
+puntos.append([-44,180.5])
+puntos.append([50,206.5])
+puntos.append([34,189.5])
+puntos.append([9,118.5])
+puntos.append([42,187.5])
+puntos.append([85,184.5])
+puntos.append([14,115.5])
+puntos.append([-40,123.5])
+puntos.append([-77,150.5])
+puntos.append([-101,118.5])
+puntos.append([-68,88.5])
+puntos.append([-64,171.5])
+puntos.append([-103,96.5])
+puntos.append([-39,35.5])
+puntos.append([-91,-4.5])
+puntos.append([-23,-34.5])
+puntos.append([-50,-71.5])
+puntos.append([-86,-210.5])
+puntos.append([-70,-258.5])
 
 #bloque funciones
 
 def capitalInicial():
-    print("Lista de ciudades")
-        " 1- Buenos Aires \n 2- San S. de Jujuy \n 3-Salta \n 4- S.M. de Tucumán\n"
-        " 5- Sgo. del Estero \n 6- Formosa \n 7-Resistencia \n 8- Santa Fe\n"
-        " 9- Corrientes \n 10- Posadas \n 11- Paraná \n 12- Cordoba \n 13- La Rioja \n"
-        " 14- San Juan \n 15- San Luis \n 16- Catamarca \n 17- Medonza \n 18- Santa Rosa \n"
-        " 19- Neuquén \n 20- Viedma \n 21- Rawson \n 22- Río Gallegos \n 23- Ushuaia ")
-    ciudad = input("Seleccione la ciudad de origen")
+    print("Lista de ciudades"
+          " 1- Buenos Aires \n 2- San S. de Jujuy \n 3-Salta \n 4- S.M. de Tucuman\n"
+          " 5- Sgo. del Estero \n 6- Formosa \n 7-Resistencia \n 8- Santa Fe\n"
+          " 9- Corrientes \n 10- Posadas \n 11- Parana \n 12- Cordoba \n 13- La Rioja \n"
+          " 14- San Juan \n 15- San Luis \n 16- Catamarca \n 17- Mendoza \n 18- Santa Rosa \n"
+          " 19- Neuquen \n 20- Viedma \n 21- Rawson \n 22- Rio Gallegos \n 23- Ushuaia ")
+    ciudadActual = input("Seleccione la ciudad de origen") -1
+    print(distancia[ciudadActual][0])
+    visitadas = []
+    posMinimo = ciudadActual
+    visitadas.append(ciudadActual)
+    for z in xrange(23):
+        minimo = 999999
+        for x in xrange(23):
+            if(distancia[ciudadActual][x] <= minimo):
+                if(distancia[ciudadActual][x] != 0):
+                    if(x not in visitadas):
+                        minimo = distancia[ciudadActual][x]
+                        posMinimo = x
+        visitadas.append(posMinimo)
+        ciudadActual = x
+        print(visitadas)
+    return(visitadas)
+                
+def dibujar(recorrido):
+    setup(400,627,0,0)
+    bgpic("350px-Argentina.gif") 
+
+    penup()
+    
+    goto(puntos[recorrido[0]][0],puntos[recorrido[0]][1])
+    dot(10, "blue")
+    pendown()
+    speed(1) 
+    
+    for x in xrange(1,len(recorrido)):
+        goto(puntos[recorrido[x]][0],puntos[recorrido[x]][1])
+        dot(10, "blue")           
+    done()
     
 
 #programa Principal
 print("Bienvenido al sistema del Viajante, el sistema recorrera las distintas capitales de la republica argentina y devolvera el menor recorrido")
 print("Seleccione la opcion deseada")
-print(" 1- Seleccionando Capital de inicio \n 2- Distancia minima por Heurístico \n 3- Distancia mínima por Algoritmos Genéticos")
+print(" 1- Seleccionando Capital de inicio \n 2- Distancia minima por Heuristico \n 3- Distancia minima por Algoritmos Geneticos")
 opc = input()
 
-if(opc == "1"):
-    capitalInicial()
-if(opc == "2"):
-    heuristica()
-if(opc == "3"):
-    geneticos()
+if(opc == 1):
+   resultado = capitalInicial()
+   dibujar(resultado)
+if(opc == 2):
+    resultado = sinCapitalInicial()
+if(opc == 3):
+    resultado = geneticos()
