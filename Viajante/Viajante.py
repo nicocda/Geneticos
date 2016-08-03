@@ -1,5 +1,6 @@
 from turtle import *
 from Tkinter import *
+from random import randint
 import ctypes
 
 
@@ -78,6 +79,23 @@ def SinCapitalInicial():
     index = kilometros.index(num)
     return menorRecorrido(index) 
 
+def geneticos():
+    inicial = [[0 for x in range(23)] for y in range(50)] 
+    fitness = []
+    total = 0;
+    for x in xrange(50):
+        for y in xrange(23):
+            num = randint(0,22)
+            inicial[x][y]  = num
+        total = total + contarKilometros(inicial[x])
+    for x in xrange(50):
+        fit = contarKilometros(inicial[x]) / float(total)
+        fitness.append(fit)
+    #Aca Iria Ruleta, crossover(ciclico) y mutacion
+    
+
+
+
 def menorRecorrido(ciudadActual):
     visitadas = []
     visitadas.append(ciudadActual)
@@ -146,4 +164,4 @@ if(opc == 2):
     resultado = SinCapitalInicial()
     imprimirResultados(resultado)
 if(opc == 3):
-    resultado = geneticos()
+    geneticos()
