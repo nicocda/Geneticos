@@ -1,7 +1,8 @@
 from turtle import *
 from Tkinter import *
-from random import randint
+import random
 import ctypes
+from random import randint, random, shuffle
 
 
 
@@ -80,21 +81,85 @@ def SinCapitalInicial():
     return menorRecorrido(index) 
 
 def geneticos():
-    inicial = [[0 for x in range(23)] for y in range(50)] 
-    fitness = []
-    total = 0;
-    for x in xrange(50):
-        for y in xrange(23):
-            num = randint(0,22)
-            inicial[x][y]  = num
-        total = total + contarKilometros(inicial[x])
-    for x in xrange(50):
-        fit = contarKilometros(inicial[x]) / float(total)
-        fitness.append(fit)
-    #Aca Iria Ruleta, crossover(ciclico) y mutacion
-    
-
-
+    inicial = [[0 for c in range(23)] for y in range(50)]
+    auxiliar = [[0 for c in range(23)] for y in range(50)]  
+    for h in xrange(200):    
+        fitness = []
+        total = 0;
+        for c in xrange(50):
+            for y in xrange(23):
+                inicial[c][y] = y
+            shuffle(inicial[c])
+            total = total + contarKilometros(inicial[c])
+        for c in xrange(50):
+            fit = contarKilometros(inicial[c]) / float(total)
+            fit = 1 - fit
+            fitness.append(fit)
+        for m in xrange(25): #tiro la ruleta 25 veces, por pares
+            sumFitness = 0
+            tirada1 = random()
+            for n in xrange(50):
+                if((tirada1 > sumFitness) & (tirada1 < (sumFitness + fitness[n]))):
+                    elegido1 = n
+                    break
+                else:
+                    sumFitness = sumFitness + fitness[n]
+            
+            sumFitness = 0
+            tirada2 = random()
+            
+            for n in xrange(50):
+                if((tirada2 > sumFitness) & (tirada2 < (sumFitness + fitness[n]))):
+                    elegido2 = n
+                    break
+                else:
+                    sumFitness = sumFitness + fitness[n]
+            crom1 = inicial[elegido1]
+            crom2 = inicial[elegido2]
+            #crossOver
+            rnd = random()
+            if(rnd < 0.75):
+                estan = []
+                estan.append(crom1[0])
+                comparador = crom2[0]
+                i=0
+                while(comparador != crom1[0]):  
+                    if(comparador is not estan):
+                        if(comparador == crom1[i]):
+                            estan.append(crom1[i])
+                            comparador = crom2[i] 
+                    if(i>=22):
+                        i=0
+                    else:
+                        i=i+1
+                
+                for z in xrange(23):
+                    
+                    if(crom1[z] is not estan):
+                        aux = []
+                        aux = crom1[z]
+                        crom1[z] = crom2[z]
+                        crom2[z] = aux     
+             #mutacion
+            rnd1 = random()
+            if(rnd1 < 0.05):
+                pos1 = randint(0,22)
+                pos2 = randint(0,22)
+                aux = crom1[pos1]
+                crom1[pos1] = crom1[pos2]
+                crom1[pos2] = aux
+            rnd2 = random()
+            if(rnd2 < 0.05):
+                pos1 = randint(0,22)
+                pos2 = randint(0,22)
+                aux = crom2[pos1]
+                crom2[pos1] = crom2[pos2]
+                crom2[pos2] = aux
+            auxiliar[2*m] = crom1
+            auxiliar[2*m+1] = crom2
+        
+    return inicial         
+             
 
 def menorRecorrido(ciudadActual):
     visitadas = []
@@ -151,17 +216,26 @@ def imprimirResultados(resultado):
     ctypes.windll.user32.MessageBoxA(0, "Recorrido total: "+str(cont)+"km", "Mapa de Argentina", 1)  #ventana muestra recorrido total
 
 #programa Principal
-print("Bienvenido al sistema del Viajante, el sistema recorrera las distintas capitales de la republica argentina y devolvera el menor recorrido")
-print("Seleccione la opcion deseada")
-print(" 1- Seleccionando Capital de inicio \n 2- Distancia minima por Heuristico \n 3- Distancia minima por Algoritmos Geneticos")
-opc = input()
-
-if(opc == 1):
-   resultado = capitalInicial()       
-   imprimirResultados(resultado)  
+opc = 4
+while(opc >= 3 or opc <=1):
+    print("Bienvenido al sistema del Viajante, el sistema recorrera las distintas capitales de la republica argentina y devolvera el menor recorrido")
+    print("Seleccione la opcion deseada")
+    print(" 1- Seleccionando Capital de inicio \n 2- Distancia minima por Heuristico \n 3- Distancia minima por Algoritmos Geneticos")
+    opc = input()
     
-if(opc == 2):
-    resultado = SinCapitalInicial()
-    imprimirResultados(resultado)
-if(opc == 3):
-    geneticos()
+    if(opc == 1):
+       resultado = capitalInicial()       
+       imprimirResultados(resultado)  
+        
+    if(opc == 2):
+        resultado = SinCapitalInicial()
+        imprimirResultados(resultado)
+    if(opc == 3):
+        resultado = geneticos()
+        for x in xrange(50):
+            print("Recorrido: ")
+            print(resultado[x])
+            print("Distancia Recorrida: ")
+            print(contarKilometros(resultado[x]))
+            
+    opc=4
