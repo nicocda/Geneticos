@@ -3,6 +3,7 @@ from Tkinter import *
 import random
 import ctypes
 from random import randint, random, shuffle
+import matplotlib.pyplot as plt
 
 
 
@@ -84,18 +85,25 @@ def geneticos():
     inicial = [[0 for c in range(23)] for y in range(50)]
     auxiliar = [[0 for c in range(23)] for y in range(50)]  
     for h in xrange(200):    
-        fitness = []
+        #genero poblacion inicial y calculo recorrido total
         total = 0;
         for c in xrange(50):
             for y in xrange(23):
                 inicial[c][y] = y
             shuffle(inicial[c])
             total = total + contarKilometros(inicial[c])
+        #acumulo los complementos
+        totalCompl = 0
         for c in xrange(50):
-            fit = contarKilometros(inicial[c]) / float(total)
-            fit = 1 - fit
+            totalCompl = totalCompl + (total - contarKilometros(inicial[c]))
+        #calculo el fitness de cada individuo
+        fitness = []
+        for c in xrange(50):
+            obj = contarKilometros(inicial[c]) / float(totalCompl)
+            fit = 1 - obj
             fitness.append(fit)
-        for m in xrange(25): #tiro la ruleta 25 veces, por pares
+        #tiro la ruleta 25 veces, por pares
+        for m in xrange(25): 
             sumFitness = 0
             tirada1 = random()
             for n in xrange(50):
@@ -107,7 +115,6 @@ def geneticos():
             
             sumFitness = 0
             tirada2 = random()
-            
             for n in xrange(50):
                 if((tirada2 > sumFitness) & (tirada2 < (sumFitness + fitness[n]))):
                     elegido2 = n
@@ -231,11 +238,17 @@ while(opc >= 3 or opc <=1):
         resultado = SinCapitalInicial()
         imprimirResultados(resultado)
     if(opc == 3):
+        totales = []
         resultado = geneticos()
         for x in xrange(50):
             print("Recorrido: ")
             print(resultado[x])
             print("Distancia Recorrida: ")
             print(contarKilometros(resultado[x]))
+            totales.append(contarKilometros(resultado[x]))
+            
+        plt.plot(totales)
+        
+        plt.show()
             
     opc=4
