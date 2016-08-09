@@ -3,9 +3,6 @@ from Tkinter import *
 import random
 import ctypes
 from random import randint, random, shuffle
-import matplotlib.pyplot as plt
-
-
 
 #bloque def constantes
 distancia = []
@@ -125,7 +122,7 @@ def geneticos():
             crom2 = inicial[elegido2]
             #crossOver
             rnd = random()
-            if(rnd < 0.75):
+            if(rnd < 0.95):
                 estan = []
                 estan.append(crom1[0])
                 comparador = crom2[0]
@@ -240,15 +237,16 @@ while(opc >= 3 or opc <=1):
     if(opc == 3):
         totales = []
         resultado = geneticos()
+        f = open('recorrido.txt', 'w')
         for x in xrange(50):
             print("Recorrido: ")
             print(resultado[x])
             print("Distancia Recorrida: ")
-            print(contarKilometros(resultado[x]))
+            distancias = contarKilometros(resultado[x])
+            print(distancias)
             totales.append(contarKilometros(resultado[x]))
-            
-        plt.plot(totales)
-        
-        plt.show()
+            f.write(str(distancias)+'\n')
+        f.close()
             
     opc=4
+    
