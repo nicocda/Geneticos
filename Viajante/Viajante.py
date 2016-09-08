@@ -80,15 +80,18 @@ def SinCapitalInicial():
 
 def geneticos():
     inicial = [[0 for c in range(23)] for y in range(50)]
-    auxiliar = [[0 for c in range(23)] for y in range(50)]  
+    auxiliar = [[0 for c in range(23)] for y in range(50)]
+    minimosRecorridos = []
+    minimasDistancias = []
+    f = open('recorrido.txt', 'w')
+    #genero poblacion inicial y calculo recorrido total
+    total = 0;
+    for c in xrange(50):
+        for y in xrange(23):
+            inicial[c][y] = y
+        shuffle(inicial[c])
+        total = total + contarKilometros(inicial[c])
     for h in xrange(200):    
-        #genero poblacion inicial y calculo recorrido total
-        total = 0;
-        for c in xrange(50):
-            for y in xrange(23):
-                inicial[c][y] = y
-            shuffle(inicial[c])
-            total = total + contarKilometros(inicial[c])
         #acumulo los complementos
         totalCompl = 0
         for c in xrange(50):
@@ -122,7 +125,7 @@ def geneticos():
             crom2 = inicial[elegido2]
             #crossOver
             rnd = random()
-            if(rnd < 0.95):
+            if(rnd < 0.75):
                 estan = []
                 estan.append(crom1[0])
                 comparador = crom2[0]
@@ -161,9 +164,21 @@ def geneticos():
                 crom2[pos2] = aux
             auxiliar[2*m] = crom1
             auxiliar[2*m+1] = crom2
-        
-    return inicial         
-             
+        inicial = auxiliar
+        kmsMin = []
+        for c in xrange(50):
+            kmsMin.append(contarKilometros(inicial[c]))
+        numMin = min(kmsMin)
+        f.write(str(numMin)+'\n')
+        indiceMinimo = kmsMin.index(numMin)
+        minimosRecorridos.append(inicial[indiceMinimo])
+        minimasDistancias.append(numMin)
+    f.close()
+    numMin = min(minimasDistancias)
+    indiceMinimo = minimasDistancias.index(numMin)
+    print("Minima Distancia: " + str(numMin))
+    print(minimosRecorridos[indiceMinimo])   
+    
 
 def menorRecorrido(ciudadActual):
     visitadas = []
@@ -220,33 +235,19 @@ def imprimirResultados(resultado):
     ctypes.windll.user32.MessageBoxA(0, "Recorrido total: "+str(cont)+"km", "Mapa de Argentina", 1)  #ventana muestra recorrido total
 
 #programa Principal
-opc = 4
-while(opc >= 3 or opc <=1):
-    print("Bienvenido al sistema del Viajante, el sistema recorrera las distintas capitales de la republica argentina y devolvera el menor recorrido")
-    print("Seleccione la opcion deseada")
-    print(" 1- Seleccionando Capital de inicio \n 2- Distancia minima por Heuristico \n 3- Distancia minima por Algoritmos Geneticos")
-    opc = input()
-    
-    if(opc == 1):
-       resultado = capitalInicial()       
-       imprimirResultados(resultado)  
-        
-    if(opc == 2):
-        resultado = SinCapitalInicial()
-        imprimirResultados(resultado)
-    if(opc == 3):
-        totales = []
-        resultado = geneticos()
-        f = open('recorrido.txt', 'w')
-        for x in xrange(50):
-            print("Recorrido: ")
-            print(resultado[x])
-            print("Distancia Recorrida: ")
-            distancias = contarKilometros(resultado[x])
-            print(distancias)
-            totales.append(contarKilometros(resultado[x]))
-            f.write(str(distancias)+'\n')
-        f.close()
-            
-    opc=4
+print("Bienvenido al sistema del Viajante, el sistema recorrera las distintas capitales de la republica argentina y devolvera el menor recorrido")
+print("Seleccione la opcion deseada")
+print(" 1- Seleccionando Capital de inicio \n 2- Distancia minima por Heuristico \n 3- Distancia minima por Algoritmos Geneticos")
+opc = input()
+   
+if(opc == 1):
+   resultado = capitalInicial()       
+   imprimirResultados(resultado)  
+if(opc == 2):
+    resultado = SinCapitalInicial()
+    imprimirResultados(resultado)
+if(opc == 3):
+    geneticos()   
+
+      
     
