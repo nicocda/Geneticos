@@ -2,7 +2,8 @@
 #16 cromosomas
 
 #imports
-from random import *
+import random
+from random import randint
 
 
 #constantes
@@ -38,6 +39,12 @@ aux = [];
 
 
 #funciones
+def imprimir(individuo):
+        print("===============================")
+        for i in xrange(0,9):
+                print(individuo[i])
+        print("objetivo: "+str(objetivo(individuo)))
+        print("===============================")
 
 def poblacionInicial():
         caso1 = []
@@ -53,7 +60,7 @@ def poblacionInicial():
         for i in xrange(9):
             for j in xrange(9):
                 if(caso1[i][j] == 0):
-                        caso1[i][j] = randint(0,9)                
+                        caso1[i][j] = randint(1,9)                
         return(caso1)
 
 def objetivo(ide):
@@ -123,87 +130,191 @@ def getSubCuadrado(indv, fila, columna):
 poblacion = []
 fitness= []
 objetivos=[]
+poblacionInicio = []
+poblacionNuevoCiclo = []
+mejorIndividuo = []
+
+
 for i in xrange(16):
-    poblacion.append(poblacionInicial())
-    objetivos.append(objetivo(poblacion[i]))
+    poblacionInicio.append(poblacionInicial())
 
-for i in xrange(16):
-    num = objetivos[i]/float(sum(objetivos))
-    fitness.append(num)
-#generamos objetivos y fitness
+poblacion = poblacionInicio
+mejorObjetivo=objetivo(poblacionInicio[0])
+mejorIndividuo=poblacionInicio[0]
+for j in xrange(100):
+        for i in xrange(16):
+                objetivos.append(objetivo(poblacion[i]))
+                
+        for i in xrange(16):
+            num = objetivos[i]/float(sum(objetivos))
+            fitness.append(num)
+        #generamos objetivos y fitness
 
 
-   
-for i in xrange(8): #tiro la ruleta 8 veces, por pares
-        #sumFitness es la posicion de la ruleta
-	sumFitness = 0
-	tirada1 = random.random()
-	
-	for n in xrange(16):
-	    if((tirada1 > sumFitness) & (tirada1 < (sumFitness + fitness[n]))):
-		elegido1 = n
-		break
-	    else:
-		sumFitness = sumFitness + fitness[n]
-	
-	sumFitness = 0
-	tirada2 = random.random()
-	
-	for n in xrange(16):
-	    if((tirada2 > sumFitness) & (tirada2 < (sumFitness + fitness[n]))):
-		elegido2 = n
-		break
-	    else:
-		sumFitness = sumFitness + fitness[n]   
-
-	padre1 = poblacion[elegido1]    #le asigno el indice que fue seleccionado al azar, el cual hace corresponder su cromosoma
-	padre2 = poblacion[elegido2]
-
-	
-	crossRandom = random.random()  #genero un nro random para el cross [0,1]
-
-	if crossRandom <= 0.9:        #aplico crossover
-        #Compara cada subCuadrado de cada padre, y el mejor se guarda en  hijo 1 (No creo que ande. REVISAR)
-	    for z in xrange(0,7,3):
-                for y in xrange(0,7,3):
-                  cant1 = contar(getSubCuadrado(padre1,y,z))
-                  cant2 = contar(getSubCuadrado(padre2,y,z))
-                  if(cant1>=cant2):
-                         for i in xrange(z,z+3):
-                                for j in xrange(y,y+3):
-                                   hijo1[y][z] =padre1[i][j]
-                  else:
-                          for i in xrange(z,z+3):
-                                for j in xrange(y,y+3):
-                                   hijo1[y][z] =padre2[i][j]
-        #Compara cada fila de cada padre y la mejor la guarda en hijo2
-           for i in xrange(9):
-               cant1 = contar(padre1[i])
-               cant2 = contar(padre2[i])
-               if(cant1>=cant2):
-                   hijo2.append(padre1[i])
-               else:
-                   hijo2.append(padre2[i])
-	else:
-        #si no hay crossover, los hijos son iguales a los padres
-	    hijo1 = padre1
-	    hijo2 = padre2
-	    
-	###################
-	#
-	#
-	#
-	#
-	#
-	#INSERT MUTACION HERE
-	#
-	#
-	#
-	#
-	#######################
-
-	'''nuevaPoblacionBin.append(hijo1) #agrego hijos a la nueva poblacion
-	nuevaPoblacionBin.append(hijo2)'''
+        #tiro la ruleta 8 veces, por pares
+        for i in xrange(8): 
+                #sumFitness es la posicion de la ruleta
+           sumFitness = 0
+           tirada1 = random.random()
+           for n in xrange(16):
+                if((tirada1 > sumFitness) & (tirada1 < (sumFitness + fitness[n]))):
+                      elegido1 = n
+                      break
+                else:
+                      sumFitness = sumFitness + fitness[n]
+           
+           sumFitness = 0
+           tirada2 = random.random()
+           for n in xrange(16):
+                if((tirada2 > sumFitness) & (tirada2 < (sumFitness + fitness[n]))):
+                      elegido2 = n
+                      break
+                else:
+                      sumFitness = sumFitness + fitness[n]   
+           padre1 = poblacion[elegido1]    #le asigno el indice que fue seleccionado al azar, el cual hace corresponder su cromosoma
+           padre2 = poblacion[elegido2]
+           hijo1 = poblacion[elegido1]
+           hijo2 = poblacion[elegido2]
+           crossRandom = random.random()  #genero un nro random para el cross [0,1]
+           if(crossRandom<= 0.9):        #aplico crossover
+                #Compara cada subCuadrado de cada padre, y el mejor se guarda en  hijo 1 (No creo que ande. REVISAR)
+                 for z in xrange(0,7,3):
+                              for y in xrange(0,7,3):
+                                        cant1 = contar(getSubCuadrado(padre1,y,z))
+                                        cant2 = contar(getSubCuadrado(padre2,y,z))
+                                        if(cant1>=cant2):
+                                                for i in xrange(z,z+3):
+                                                        for j in xrange(y,y+3):
+                                                                hijo1[y][z] =padre1[i][j]
+                                        else:
+                                                for i in xrange(z,z+3):
+                                                        for j in xrange(y,y+3):
+                                                                hijo1[y][z] =padre2[i][j]
+                #Compara cada fila de cada padre y la mejor la guarda en hijo2
+                 for i in xrange(9):
+                         cant1 = contar(padre1[i])
+                         cant2 = contar(padre2[i])
+                         if(cant1>=cant2):
+                                 hijo2.append(padre1[i])
+                         else:
+                                 hijo2.append(padre2[i])
+        #mutacion Fila
+           mutRandom = random.random()
+           if(mutRandom<=0.1):
+                   fila = randint(0,8)
+                   posx = randint(0,8)
+                   posy = randint(0,8)
+                   aux = hijo1[fila][posx]
+                   hijo1[fila][posx] = hijo1[fila][posy]
+                   hijo1[fila][posy] = aux
+           mutRandom = random.random()
+           if(mutRandom<=0.1):
+                   fila = randint(0,8)
+                   posx = randint(0,8)
+                   posy = randint(0,8)
+                   aux = hijo2[fila][posx]
+                   hijo2[fila][posx] = hijo2[fila][posy]
+                   hijo2[fila][posy] = aux
+        #mutacion columna           
+           mutRandom = random.random()
+           if(mutRandom<=0.3):
+                   columna = randint(0,8)
+                   posx = randint(0,8)
+                   posy = randint(0,8)
+                   aux = hijo1[posx][columna]
+                   hijo1[posx][columna] = hijo1[posy][columna]
+                   hijo1[posy][columna] = aux
+           mutRandom = random.random()
+           if(mutRandom<=0.3):
+                   columna = randint(0,8)
+                   posx = randint(0,8)
+                   posy = randint(0,8)
+                   aux = hijo2[posx][columna]
+                   hijo2[posx][columna] = hijo2[posy][columna]
+                   hijo2[posy][columna] = aux
+        #mutacion subCuadrado
+           mutRandom = random.random()
+           if(mutRandom<=0.3):
+                   subCuadradoX = randint(0,2)*3 #(0=>0; 1=>3; 2=>6)
+                   subCuadradoY = randint(0,2)*3 #(0=>0; 1=>3; 2=>6)
+                   #posx1 y las demas son posiciones relativas dentro del cuadrado
+                   posx1 = randint(0,2)
+                   posy1 = randint(0,2)
+                   posx2 = randint(0,2)
+                   posy2 = randint(0,2)
+                   #como son relativas, para llegar a la absoluta tengo que sumarle el cuadrado
+                   aux = hijo1[subCuadradoX+posx1][subCuadradoY+posy1]
+                   hijo1[subCuadradoX+posx1][subCuadradoY+posy1] = hijo1[subCuadradoX+posx2][subCuadradoY+posy2]
+                   hijo1[subCuadradoX+posx2][subCuadradoY+posy2] = aux
+           mutRandom = random.random()
+           if(mutRandom<=0.3):
+                   subCuadradoX = randint(0,2)*3 #(0=>0; 1=>3; 2=>6)
+                   subCuadradoY = randint(0,2)*3 #(0=>0; 1=>3; 2=>6)
+                   #posx1 y las demas son posiciones relativas dentro del cuadrado
+                   posx1 = randint(0,2)
+                   posy1 = randint(0,2)
+                   posx2 = randint(0,2)
+                   posy2 = randint(0,2)
+                   #como son relativas, para llegar a la absoluta tengo que sumarle el cuadrado
+                   aux = hijo2[subCuadradoX+posx1][subCuadradoY+posy1]
+                   hijo2[subCuadradoX+posx1][subCuadradoY+posy1] = hijo2[subCuadradoX+posx2][subCuadradoY+posy2]
+                   hijo2[subCuadradoX+posx2][subCuadradoY+posy2] = aux
+        #mutacion de un numero del individuo
+           mutRandom = random.random()
+           if(mutRandom<=0.3):
+                   posx = randint(0,8)
+                   posy = randint(0,8)
+                   nuevoNumero = randint(1,9) #este es del 1 al 9 porque son los valores
+                   hijo1[posx][posy] = nuevoNumero
+           mutRandom = random.random()
+           if(mutRandom<=0.3):
+                   posx = randint(0,8)
+                   posy = randint(0,8)
+                   nuevoNumero = randint(1,9)
+                   hijo2[posx][posy] = nuevoNumero
+           poblacionNuevoCiclo.append(hijo1)
+           poblacionNuevoCiclo.append(hijo2)
+        imprimir(hijo1)
+        #aca sigue
+        poblacion = poblacionNuevoCiclo
+        poblacionNuevoCiclo = []
+        posPeorObj = -1
+        peorObjetivo = 9*9*9+1 #lo maximo
+        for i in xrange(16):
+                if(objetivo(poblacion[i])<= peorObjetivo):
+                        peorObjetivo = objetivo(poblacion[i])
+                        posPeorObj = i
+        cambio = 0
+        for i in xrange(16):
+                if(objetivo(poblacion[i]) > mejorObjetivo):
+                   mejorObjetivo=objetivo(poblacion[i])
+                   mejorIndividuo = poblacion[i]
+                   cambio = 1
+        if(cambio == 0):
+                poblacion[posPeorObj] = mejorIndividuo
+        if(mejorObjetivo == 9*9*9):
+                break;
+                   
+                   
+                   
+        
+        
+print(poblacion)
+   ###################
+   #
+   #
+   #
+   #
+   #
+   #INSERT MUTACION HERE
+   #
+   #
+   #
+   #
+   #######################
+        
+'''nuevaPoblacionBin.append(hijo1) #agrego hijos a la nueva poblacion
+nuevaPoblacionBin.append(hijo2)'''
 
 
 
