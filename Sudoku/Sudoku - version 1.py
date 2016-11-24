@@ -274,8 +274,7 @@ for j in xrange(100):
                    hijo2[posx][posy] = nuevoNumero
            poblacionNuevoCiclo.append(hijo1)
            poblacionNuevoCiclo.append(hijo2)
-        imprimir(hijo1)
-        #aca sigue
+        imprimir(hijo2)
         poblacion = poblacionNuevoCiclo
         poblacionNuevoCiclo = []
         posPeorObj = -1
@@ -299,7 +298,7 @@ for j in xrange(100):
                    
         
         
-print(poblacion)
+
    ###################
    #
    #
