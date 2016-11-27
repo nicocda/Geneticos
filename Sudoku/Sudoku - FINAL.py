@@ -1,41 +1,7 @@
-'''
-Created on 24 nov. 2016
-
-@author: nicolas
-'''
-
-#16 cromosomas
-
 #imports
 import random
 from random import randint
-
-
-#constantes
-'''
-caso1 = []
-caso1.append([0,2,4,0,0,7,0,0,0])
-caso1.append([6,0,0,0,0,0,0,0,0])
-caso1.append([0,0,3,6,8,0,4,1,5])
-caso1.append([4,3,1,0,0,5,0,0,0])
-caso1.append([5,0,0,0,0,0,0,3,2])
-caso1.append([7,9,0,0,0,0,0,6,0])
-caso1.append([2,0,9,7,1,0,8,0,0])
-caso1.append([0,4,0,0,9,3,0,0,0])
-caso1.append([3,1,0,0,0,4,7,5,0])
-
-caso2 = []
-
-caso2.append([0,0,0,0,3,0,9,0,1])
-caso2.append([7,0,1,0,0,0,0,0,0])
-caso2.append([0,0,0,0,4,0,0,8,0])
-caso2.append([0,9,0,7,0,2,0,0,0])
-caso2.append([0,0,0,8,0,0,6,0,0])
-caso2.append([0,3,0,0,6,0,0,0,5])
-caso2.append([1,6,8,0,0,4,0,9,0])
-caso2.append([0,0,0,9,0,0,0,7,0])
-caso2.append([0,0,4,0,0,0,0,0,0])
-'''
+import matplotlib.pyplot as plt 
 
 
 
@@ -49,6 +15,7 @@ def imprimir(individuo):
     for i in xrange(0,9):
         print(individuo[i])
     print("objetivo: "+str(objetivo(individuo)))
+    plt.plot(objetivo(individuo))
     print("===============================")
 
 def poblacionInicial(opc):
@@ -287,7 +254,7 @@ for p in xrange(100):
             hijo2[posx][posy] = nuevoNumero
         poblacionNuevoCiclo.append(hijo1)
         poblacionNuevoCiclo.append(hijo2)
-    imprimir(poblacionNuevoCiclo)
+    
     poblacion = poblacionNuevoCiclo
     poblacionNuevoCiclo = []
     posPeorObj = -1
@@ -304,10 +271,13 @@ for p in xrange(100):
             mejorObjetivo=objetivo(poblacion[i])
             mejorIndividuo = poblacion[i]
             cambio = 1
+    #imprimo el mejor individuo de cada repeticion
+    imprimir(mejorIndividuo)
     if(cambio == 0):
         poblacion[posPeorObj] = mejorIndividuo
     if(mejorObjetivo == 9*9*9):
-        break;   
+        break;
+   
 '''nuevaPoblacionBin.append(hijo1) #agrego hijos a la nueva poblacion
 nuevaPoblacionBin.append(hijo2)'''
 
